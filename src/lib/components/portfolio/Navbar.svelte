@@ -7,7 +7,7 @@
 	import ModeToggle from './ModeToggle.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { mode } from 'mode-watcher';
-	$: theme = $mode;
+	$: theme = $mode ?? 'dark';
 </script>
 
 <div
