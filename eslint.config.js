@@ -28,6 +28,26 @@ export default [
 		}
 	},
 	{
-		ignores: ['build/', '.svelte-kit/', 'dist/']
+		ignores: [
+			'**/.svelte-kit/**',
+			'.svelte-kit/**',
+			'.vercel/**',
+			'build/**',
+			'dist/**',
+			'node_modules/**'
+		]
+	},
+	{
+		rules: {
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_',
+					ignoreRestSiblings: true
+				}
+			]
+		}
 	}
 ];
