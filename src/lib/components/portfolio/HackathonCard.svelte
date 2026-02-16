@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { marked } from 'marked';
+	import { browser } from '$app/environment';
+	import type { ComponentType } from 'svelte';
+	import type DOMPurifyType from 'dompurify';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { marked } from 'marked';
-	import DOMPurify from 'isomorphic-dompurify';
-	import type { ComponentType } from 'svelte';
-
 	export let title: string;
 	export let description: string;
 	export let dates: string;
@@ -16,7 +16,19 @@
 		href: string;
 	}[] = [];
 
-	$: htmlDescription = description ? DOMPurify.sanitize(marked.parse(description) as string) : '';
+	let htmlDescription = '';
+
+	async function sanitize(raw: string) {
+		const mod = await import('dompurify');
+		const DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
+		htmlDescription = DOMPurify.sanitize(raw);
+	}
+
+	$: {
+		const raw = description ? (marked.parse(description) as string) : '';
+		if (!browser) htmlDescription = raw;
+		else sanitize(raw);
+	}
 </script>
 
 <li class="relative ml-10 py-4">

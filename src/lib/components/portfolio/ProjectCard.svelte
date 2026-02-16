@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { marked } from 'marked';
-	import DOMPurify from 'isomorphic-dompurify';
+	import { browser } from '$app/environment';
+	import type DOMPurifyType from 'dompurify';
 	import type { ComponentType } from 'svelte';
 	import Badge from '../ui/badge/badge.svelte';
 
@@ -17,7 +18,19 @@
 	type ProjectLink = { icon: ComponentType; type: string; href: string };
 	export let links: ProjectLink[] = [];
 
-	$: htmlDescription = description ? DOMPurify.sanitize(marked.parse(description) as string) : '';
+	let htmlDescription = '';
+
+	async function sanitize(raw: string) {
+		const mod = await import('dompurify');
+		const DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
+		htmlDescription = DOMPurify.sanitize(raw);
+	}
+
+	$: {
+		const raw = description ? (marked.parse(description) as string) : '';
+		if (!browser) htmlDescription = raw;
+		else sanitize(raw);
+	}
 </script>
 
 <!-- Card -->
