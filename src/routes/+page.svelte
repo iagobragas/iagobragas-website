@@ -6,7 +6,7 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import { DATA } from '$lib/data/resume';
-	import { marked } from 'marked';
+	import { renderMarkdownSafe } from '$lib/markdown';
 	let BLUR_FADE_DELAY = 0.04;
 </script>
 
@@ -65,7 +65,9 @@
 			<div
 				class="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert"
 			>
-				{@html marked(DATA.summary)}
+				<!-- HTML comes from marked() and is sanitized with DOMPurify -->
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html renderMarkdownSafe(DATA.summary)}
 			</div>
 		</BlurFade>
 	</section>

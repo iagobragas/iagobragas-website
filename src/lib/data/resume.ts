@@ -27,7 +27,7 @@ import LaurierImg from '$lib/imgs/laurier.png';
 import IBImg from '$lib/imgs/ib.png';
 
 // Your resume data
-export let DATA = {
+export const DATA = {
 	name: 'Sikandar Bhide',
 	initials: 'SB',
 	url: 'https://github.com/SikandarJODD',
