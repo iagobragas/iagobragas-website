@@ -1,13 +1,19 @@
 import { marked } from 'marked';
 import { browser } from '$app/environment';
-import type DOMPurifyType from 'dompurify';
+import type { default as DOMPurifyType } from 'dompurify';
 
-export async function renderMarkdownSafe(md: string) {
+let DOMPurify: typeof DOMPurifyType | null = null;
+
+if (browser) {
+	import('dompurify').then((mod) => {
+		DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
+	});
+}
+
+export function renderMarkdownSafe(md: string): string {
 	const html = marked.parse(md ?? '') as string;
 
 	if (!browser) return html;
 
-	const mod = await import('dompurify');
-	const DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
-	return DOMPurify.sanitize(html);
+	return DOMPurify ? DOMPurify.sanitize(html) : html;
 }
