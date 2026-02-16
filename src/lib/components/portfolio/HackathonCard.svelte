@@ -1,17 +1,34 @@
 <script lang="ts">
+	import { marked } from 'marked';
+	import { browser } from '$app/environment';
+	import type { ComponentType } from 'svelte';
+	import type DOMPurifyType from 'dompurify';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { marked } from 'marked';
 	export let title: string;
 	export let description: string;
 	export let dates: string;
 	export let location: string;
 	export let image: string = '';
 	export let links: readonly {
-		icon?: any;
+		icon?: ComponentType;
 		title: string;
 		href: string;
 	}[] = [];
+
+	let htmlDescription = '';
+
+	async function sanitize(raw: string) {
+		const mod = await import('dompurify');
+		const DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
+		htmlDescription = DOMPurify.sanitize(raw);
+	}
+
+	$: {
+		const raw = description ? (marked.parse(description) as string) : '';
+		if (!browser) htmlDescription = raw;
+		else sanitize(raw);
+	}
 </script>
 
 <li class="relative ml-10 py-4">
@@ -30,8 +47,10 @@
 			<p class="text-sm text-muted-foreground">{location}</p>
 		{/if}
 		{#if description}
-			<span class="prose dark:prose-invert text-sm text-muted-foreground">
-				{@html marked(description)}
+			<span class="prose text-sm text-muted-foreground dark:prose-invert">
+				<!-- HTML comes from marked() and is sanitized with DOMPurify -->
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+				{@html htmlDescription}
 			</span>
 		{/if}
 	</div>

@@ -10,7 +10,7 @@
 	export let title: string = '';
 	export let subtitle: string = '';
 	export let href: string = '';
-	export let badges: string[]=[''];
+	export let badges: string[] = [''];
 	export let description: string = '';
 	export let start: string = '';
 	export let end: string = '';
@@ -61,6 +61,10 @@
 				</div>
 				{#if title}
 					<div class="font-sans text-xs">{title}</div>
+				{/if}
+
+				{#if subtitle}
+					<div class="text-xs text-muted-foreground">{subtitle}</div>
 				{/if}
 			</div>
 			{#if description}

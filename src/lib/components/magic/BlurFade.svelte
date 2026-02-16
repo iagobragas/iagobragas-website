@@ -19,6 +19,7 @@
 </script>
 
 <AnimatePresence let:item list={[{ key: id }]}>
+	{@const _unused = item}
 	<Motion
 		initial="hidden"
 		animate={isInView}
