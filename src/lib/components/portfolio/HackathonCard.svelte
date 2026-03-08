@@ -34,7 +34,7 @@
 		{/if}
 		{#if description}
 			<span class="prose text-sm text-muted-foreground dark:prose-invert">
-				<!-- HTML comes from marked() and is sanitized with DOMPurify -->
+				<!-- HTML comes from the hardened markdown renderer -->
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 				{@html htmlDescription}
 			</span>

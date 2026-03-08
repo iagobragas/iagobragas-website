@@ -50,7 +50,7 @@
 				class="prose max-w-full text-pretty font-sans text-xs text-muted-foreground dark:prose-invert"
 			>
 				{#if description}
-					<!-- HTML comes from marked() and is sanitized with DOMPurify -->
+					<!-- HTML comes from the hardened markdown renderer -->
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html htmlDescription}
 				{/if}

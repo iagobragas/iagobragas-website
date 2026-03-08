@@ -1,19 +1,39 @@
-import { marked } from 'marked';
-import { browser } from '$app/environment';
-import type { default as DOMPurifyType } from 'dompurify';
+import { Marked } from 'marked';
 
-let DOMPurify: typeof DOMPurifyType | null = null;
+const SAFE_PROTOCOLS = new Set(['http:', 'https:', 'mailto:', 'tel:']);
 
-if (browser) {
-	import('dompurify').then((mod) => {
-		DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
-	});
+function isSafeHref(href: string): boolean {
+	const value = href.trim();
+	if (!value) return false;
+	if (value.startsWith('#')) return true;
+	if (value.startsWith('/')) return true;
+	if (value.startsWith('./') || value.startsWith('../')) return true;
+	if (value.startsWith('//')) return true;
+
+	try {
+		const url = new URL(value);
+		return SAFE_PROTOCOLS.has(url.protocol);
+	} catch {
+		return false;
+	}
 }
 
+const markdown = new Marked({ gfm: true, breaks: false });
+
+markdown.use({
+	walkTokens(token) {
+		if (token.type === 'link' && !isSafeHref(token.href ?? '')) {
+			token.href = '#';
+		}
+
+		if (token.type === 'image' && !isSafeHref(token.href ?? '')) {
+			token.href = '';
+		}
+	}
+});
+
 export function renderMarkdownSafe(md: string): string {
-	const html = marked.parse(md ?? '') as string;
-
-	if (!browser) return html;
-
-	return DOMPurify ? DOMPurify.sanitize(html) : html;
+	// Escape raw HTML so markdown content cannot inject arbitrary tags/scripts.
+	const escaped = (md ?? '').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+	return markdown.parse(escaped) as string;
 }
