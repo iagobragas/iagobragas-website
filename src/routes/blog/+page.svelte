@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { formatDate } from '$lib/utils';
 	import BlurFade from '$lib/components/magic/BlurFade.svelte';
+	import { resolve } from '$app/paths';
 
 	export let data;
 	let BLUR_FADE_DELAY = 0.04;
@@ -16,10 +17,10 @@
 <!-- Posts -->
 <section>
 	<ul class="posts">
-		{#each data.posts as post, id}
+		{#each data.posts as post, id (post.slug)}
 			<li class="post">
 				<BlurFade delay={BLUR_FADE_DELAY * 2 + id * 0.05}>
-					<a class="mb-4 flex flex-col space-y-1" href="/blog/{post.slug}">
+					<a class="mb-4 flex flex-col space-y-1" href={resolve(`/blog/${post.slug}`)}>
 						<div class="flex w-full flex-col">
 							<p class="tracking-tight">{post.title}</p>
 							<p class="h-6 text-xs text-muted-foreground">

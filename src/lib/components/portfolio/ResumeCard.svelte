@@ -24,7 +24,7 @@
 	};
 </script>
 
-<a href={href || '#'} on:click={handleClick}>
+<a href={href || '#'} rel="external" on:click={handleClick}>
 	<div class="flex rounded-lg bg-card text-card-foreground">
 		<div class="flex-none">
 			<Avatar.Root class="bg-muted-background m-auto size-12 border dark:bg-foreground">
@@ -41,8 +41,8 @@
 						{company}
 						{#if badges?.length > 0 && badges[0] !== ''}
 							<span class="inline-flex gap-x-1">
-								{#each badges as badge, index}
-									<Badge variant="secondary" class="align-middle text-xs" key={index}>
+								{#each badges as badge, index (`${badge}-${index}`)}
+									<Badge variant="secondary" class="align-middle text-xs">
 										{badge}
 									</Badge>
 								{/each}

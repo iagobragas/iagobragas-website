@@ -5,30 +5,31 @@
 	import ResumeCard from '$lib/components/portfolio/ResumeCard.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import { DATA } from '$lib/data/resume';
+	import { getResumeContext } from '$lib/data/resume-context';
 	import { renderMarkdownSafe } from '$lib/markdown';
 	let BLUR_FADE_DELAY = 0.04;
+	const { DATA, messages } = getResumeContext();
 </script>
 
 <svelte:head>
-	<title>{DATA.name}</title>
-	<meta name="description" content={DATA.description} />
-	<meta property="og:title" content={DATA.name} />
-	<meta property="og:description" content={DATA.description} />
-	<meta property="og:url" content={DATA.url} />
-	<meta property="og:site_name" content={DATA.name} />
-	<meta property="og:image" content={DATA.img} />
-	<meta property="og:locale" content="en_US" />
+	<title>{$DATA.name}</title>
+	<meta name="description" content={$DATA.description} />
+	<meta property="og:title" content={$DATA.name} />
+	<meta property="og:description" content={$DATA.description} />
+	<meta property="og:url" content={$DATA.url} />
+	<meta property="og:site_name" content={$DATA.name} />
+	<meta property="og:image" content={$DATA.img} />
+	<meta property="og:locale" content={$DATA.locale} />
 	<meta property="og:type" content="website" />
 	<meta name="robots" content="index, follow" />
 	<meta
 		name="googlebot"
 		content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
 	/>
-	<meta name="twitter:title" content={DATA.name} />
+	<meta name="twitter:title" content={$DATA.name} />
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:image" content={DATA.img} />
-	<meta name="twitter:description" content={DATA.description} />
+	<meta name="twitter:image" content={$DATA.img} />
+	<meta name="twitter:description" content={$DATA.description} />
 
 	<meta name="google-site-verification" content="your-google-verification-code" />
 	<meta name="yandex-verification" content="your-yandex-verification-code" />
@@ -41,16 +42,16 @@
 					<BlurFade
 						delay={BLUR_FADE_DELAY}
 						class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-						yOffset={8}>Hi, I'm Iago 👋</BlurFade
+						yOffset={8}>{$messages.heroTitle}</BlurFade
 					>
 					<BlurFade class="max-w-[600px] md:text-xl" delay={BLUR_FADE_DELAY}
-						>Software Engineer passionate about automation.</BlurFade
+						>{$messages.heroSubtitle}</BlurFade
 					>
 				</div>
 				<BlurFade delay={BLUR_FADE_DELAY}>
 					<Avatar.Root class="size-28 border">
-						<Avatar.Image alt={DATA.name} src={DATA.avatarUrl} />
-						<Avatar.Fallback>{DATA.initials}</Avatar.Fallback>
+						<Avatar.Image alt={$DATA.name} src={$DATA.avatarUrl} />
+						<Avatar.Fallback>{$DATA.initials}</Avatar.Fallback>
 					</Avatar.Root>
 				</BlurFade>
 			</div>
@@ -58,7 +59,7 @@
 	</section>
 	<section id="about">
 		<BlurFade delay={BLUR_FADE_DELAY}>
-			<h2 class="text-xl font-bold">About</h2>
+			<h2 class="text-xl font-bold">{$messages.aboutTitle}</h2>
 		</BlurFade>
 		<BlurFade delay={BLUR_FADE_DELAY * 1.4}>
 			<div
@@ -66,16 +67,16 @@
 			>
 				<!-- HTML comes from marked() and is sanitized with DOMPurify -->
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html renderMarkdownSafe(DATA.summary)}
+				{@html renderMarkdownSafe($DATA.summary)}
 			</div>
 		</BlurFade>
 	</section>
 	<section id="work">
 		<div class="flex min-h-0 flex-col gap-y-3">
 			<BlurFade delay={BLUR_FADE_DELAY}>
-				<h2 class="text-xl font-bold">Work Experience</h2>
+				<h2 class="text-xl font-bold">{$messages.workTitle}</h2>
 			</BlurFade>
-			{#each DATA.work as work, id}
+			{#each $DATA.work as work, id (`${work.company}-${id}`)}
 				<BlurFade delay={BLUR_FADE_DELAY * 1.2 + id * 0.05}>
 					<ResumeCard {...work} />
 				</BlurFade>
@@ -85,9 +86,9 @@
 	<section id="education">
 		<div class="flex min-h-0 flex-col gap-y-3">
 			<BlurFade delay={BLUR_FADE_DELAY}>
-				<h2 class="text-xl font-bold">Education</h2>
+				<h2 class="text-xl font-bold">{$messages.educationTitle}</h2>
 			</BlurFade>
-			{#each DATA.education as edu, id}
+			{#each $DATA.education as edu, id (`${edu.school}-${id}`)}
 				<BlurFade delay={BLUR_FADE_DELAY * 1.2 + id * 0.05}>
 					<ResumeCard
 						href={edu.href}
@@ -105,10 +106,10 @@
 	<section id="skills">
 		<div class="flex min-h-0 flex-col gap-y-3">
 			<BlurFade delay={BLUR_FADE_DELAY}>
-				<h2 class="text-xl font-bold">Skills</h2>
+				<h2 class="text-xl font-bold">{$messages.skillsTitle}</h2>
 			</BlurFade>
 			<div class="flex flex-wrap gap-1">
-				{#each DATA.skills as skill, id}
+				{#each $DATA.skills as skill, id (`${skill}-${id}`)}
 					<BlurFade delay={BLUR_FADE_DELAY * id + 0.002}>
 						<Badge>{skill}</Badge>
 					</BlurFade>
@@ -122,22 +123,21 @@
 				<div class="flex flex-col items-center justify-center space-y-4 text-center">
 					<div class="space-y-2">
 						<div class="inline-block rounded-lg bg-foreground px-3 py-1 text-sm text-background">
-							My Projects
+							{$messages.projectsBadge}
 						</div>
 						<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
-							Check out my latest work
+							{$messages.projectsTitle}
 						</h2>
 						<p
 							class="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 						>
-							I&apos;ve worked on everything from simple websites to complex web applications. Here
-							are a few of my favorite projects.
+							{$messages.projectsIntro}
 						</p>
 					</div>
 				</div>
 			</BlurFade>
 			<div class="mx-auto grid max-w-[800px] grid-cols-1 gap-3 sm:grid-cols-2">
-				{#each DATA.projects as project, id}
+				{#each $DATA.projects as project, id (`${project.title}-${id}`)}
 					<BlurFade delay={BLUR_FADE_DELAY * 1.5 + id * 0.05}>
 						<ProjectCard
 							href={project.href}
@@ -167,7 +167,7 @@
 							class="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 						>
 							During my time in university, I attended{' '}
-							{DATA.hackathons.length}+ hackathons. People from around the country would come
+							{$DATA.hackathons.length}+ hackathons. People from around the country would come
 							together and build incredible things in 2-3 days. It was eye-opening to see the
 							endless possibilities brought to life by a group of motivated and passionate
 							individuals.
@@ -177,7 +177,7 @@
 			</BlurFade>
 			<BlurFade delay={BLUR_FADE_DELAY * 2}>
 				<ul class="mb-4 ml-4 divide-y divide-dashed border-l">
-					{#each DATA.hackathons as project}
+					{#each $DATA.hackathons as project}
 						<BlurFade delay={BLUR_FADE_DELAY}>
 							<HackathonCard {...project} />
 						</BlurFade>
@@ -192,17 +192,21 @@
 			<BlurFade delay={BLUR_FADE_DELAY * 2}>
 				<div class="space-y-3">
 					<div class="inline-block rounded-lg bg-foreground px-3 py-1 text-sm text-background">
-						Contact
+						{$messages.contactBadge}
 					</div>
-					<h2 class="text-3xl font-bold tracking-tight sm:text-5xl">Get in Touch</h2>
+					<h2 class="text-3xl font-bold tracking-tight sm:text-5xl">{$messages.contactTitle}</h2>
 					<p
 						class="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 					>
-						Want to chat? Just shoot me a dm
-						<a href={DATA.contact.social.X.url} class="text-blue-500 hover:underline">
-							with a direct question on twitter
+						{$messages.contactTextStart}
+						<a
+							href={$DATA.contact.social.X.url}
+							rel="external"
+							class="text-blue-500 hover:underline"
+						>
+							{$messages.contactTextLink}
 						</a>
-						and I&apos;ll respond whenever I can.
+						{$messages.contactTextEnd}
 					</p>
 				</div>
 			</BlurFade>

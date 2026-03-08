@@ -1,0 +1,20 @@
+export type Messages = {
+	heroTitle: string;
+	heroSubtitle: string;
+	aboutTitle: string;
+	workTitle: string;
+	educationTitle: string;
+	skillsTitle: string;
+	projectsBadge: string;
+	projectsTitle: string;
+	projectsIntro: string;
+	contactBadge: string;
+	contactTitle: string;
+	contactTextStart: string;
+	contactTextLink: string;
+	contactTextEnd: string;
+	toggleThemeAria: string;
+	toggleThemeTooltip: string;
+	toggleLanguageAria: string;
+	toggleLanguageTooltip: string;
+};
