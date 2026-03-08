@@ -51,7 +51,7 @@
 
 	<!-- Tags -->
 	<div class="tags mb-2 flex space-x-2">
-		{#each data.meta.categories as category}
+		{#each data.meta.categories as category, i (`${category}-${i}`)}
 			<Badge variant="outline" class="rounded-[4px]">{category}</Badge>
 		{/each}
 	</div>

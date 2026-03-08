@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { marked } from 'marked';
-	import { browser } from '$app/environment';
 	import type { ComponentType } from 'svelte';
-	import type DOMPurifyType from 'dompurify';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import { renderMarkdownSafe } from '$lib/markdown';
 	export let title: string;
 	export let description: string;
 	export let dates: string;
@@ -16,19 +14,7 @@
 		href: string;
 	}[] = [];
 
-	let htmlDescription = '';
-
-	async function sanitize(raw: string) {
-		const mod = await import('dompurify');
-		const DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
-		htmlDescription = DOMPurify.sanitize(raw);
-	}
-
-	$: {
-		const raw = description ? (marked.parse(description) as string) : '';
-		if (!browser) htmlDescription = raw;
-		else sanitize(raw);
-	}
+	$: htmlDescription = renderMarkdownSafe(description);
 </script>
 
 <li class="relative ml-10 py-4">
@@ -56,9 +42,9 @@
 	</div>
 	{#if links && links.length > 0}
 		<div class="mt-2 flex flex-row flex-wrap items-start gap-2">
-			{#each links as link, idx}
-				<a href={link.href}>
-					<Badge key={idx} title={link.title} class="flex gap-2">
+			{#each links as link (link.href)}
+				<a href={link.href} rel="external">
+					<Badge title={link.title} class="flex gap-2">
 						<svelte:component this={link.icon} class="h-4 w-4 " strokeWidth={1.6} />
 						{link.title}
 					</Badge>

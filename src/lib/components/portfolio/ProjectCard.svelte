@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { marked } from 'marked';
-	import { browser } from '$app/environment';
-	import type DOMPurifyType from 'dompurify';
 	import type { ComponentType } from 'svelte';
 	import Badge from '../ui/badge/badge.svelte';
+	import { renderMarkdownSafe } from '$lib/markdown';
 
 	export let className: string = '';
 	export let title: string;
@@ -18,26 +16,14 @@
 	type ProjectLink = { icon: ComponentType; type: string; href: string };
 	export let links: ProjectLink[] = [];
 
-	let htmlDescription = '';
-
-	async function sanitize(raw: string) {
-		const mod = await import('dompurify');
-		const DOMPurify = (mod.default ?? mod) as typeof DOMPurifyType;
-		htmlDescription = DOMPurify.sanitize(raw);
-	}
-
-	$: {
-		const raw = description ? (marked.parse(description) as string) : '';
-		if (!browser) htmlDescription = raw;
-		else sanitize(raw);
-	}
+	$: htmlDescription = renderMarkdownSafe(description);
 </script>
 
 <!-- Card -->
 <div
 	class={`flex h-full flex-col overflow-hidden rounded-lg border bg-card text-card-foreground transition-all duration-300 ease-out hover:shadow-lg ${className}`}
 >
-	<a href={href || '#'} class="block cursor-pointer">
+	<a href={href || '#'} rel="external" class="block cursor-pointer">
 		{#if video}
 			<video
 				class="pointer-events-none mx-auto h-40 w-full object-cover object-top"
@@ -76,7 +62,7 @@
 	<div class="mt-auto flex flex-col text-pretty px-2 font-sans text-sm text-muted-foreground">
 		{#if tags && tags.length > 0}
 			<div class="mt-2 flex flex-wrap gap-1">
-				{#each tags as tag}
+				{#each tags as tag (tag)}
 					<Badge class="rounded-[4px] px-1 py-0 text-[10px]" variant="secondary">
 						{tag}
 					</Badge>
@@ -89,8 +75,8 @@
 	<div class="flex items-center px-2 pb-2 pt-2">
 		{#if links && links.length > 0}
 			<div class="flex flex-row flex-wrap items-start gap-1">
-				{#each links as item}
-					<a href={item.href} target="_blank" rel="noreferrer">
+				{#each links as item (item.href)}
+					<a href={item.href} target="_blank" rel="external noreferrer">
 						<Badge class="flex items-center justify-center gap-1 px-2 py-1 text-[10px]">
 							<svelte:component this={item.icon} class="mb-px size-3" strokeWidth={1.6} />
 							{item.type}
