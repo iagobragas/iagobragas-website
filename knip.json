@@ -1,0 +1,8 @@
+{
+	"$schema": "https://unpkg.com/knip@latest/schema.json",
+	"ignoreIssues": {
+		"src/lib/components/ui/avatar/index.ts": ["exports"],
+		"src/lib/components/ui/button/index.ts": ["exports"],
+		"src/lib/components/ui/tooltip/index.ts": ["exports"]
+	}
+}
