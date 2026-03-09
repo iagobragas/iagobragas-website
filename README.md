@@ -1,43 +1,54 @@
-# Portfolio Template
+# iagobragas-website
 
-Inspired from [Magic UI](https://magicui.design) Portfolio Template & [Dillion Verma](https://github.com/dillionverma)
-Build with Svelte, [shadcn-svelte](https://www.shadcn-svelte.com) and [Svelte-Animations](https://animation-svelte.vercel.app)
+Personal portfolio built with SvelteKit and deployed on Vercel.
 
-## Features
+## Stack
 
----
+- SvelteKit (Svelte 5)
+- TypeScript
+- TailwindCSS
+- Bits UI
+- Vercel adapter
 
-- Setup only takes a few minutes by editing the [single config file](https://github.com/SikandarJODD/portfolio-template/blob/main/src/lib/data/resume.ts)
-- Built using SvelteKit, Typescript, Shadcn/UI, TailwindCSS, Svelte - Motion, Svelte Animations
-- Responsive for different devices
-- Optimized for Svelte and Vercel
+## Main Features
 
-## Getting Started
+- Portfolio sections (about, work, education, skills, projects, contact)
+- Theme toggle (light/dark)
+- Bilingual UI and content (EN/PT)
+- SSR-deterministic language resolution using cookie + `Accept-Language`
+- Safe markdown rendering for profile/project descriptions
 
----
+## Project Structure
 
-1. Clone the repository
+- `src/routes/+page.svelte`: main portfolio page
+- `src/routes/+layout.svelte`: global layout, theme watcher and i18n context setup
+- `src/routes/+layout.server.ts`: server-side language resolution
+- `src/lib/data/resume.en.ts` and `src/lib/data/resume.pt.ts`: portfolio content per language
+- `src/lib/i18n/`: translated UI labels/messages
+- `src/lib/markdown.ts`: hardened markdown rendering helper
 
-```bash
-git clone https://github.com/SikandarJODD/portfolio-template
-```
+## Development
 
-2. Move into the project directory
-
-```bash
-cd portfolio-template
-```
-
-3. Install dependencies
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-4. Start the development server
+Run development server:
 
 ```bash
 npm run dev
 ```
 
-5. Open the [Config File](https://github.com/SikandarJODD/portfolio-template/blob/main/src/lib/data/resume.ts) and make changes
+Run checks:
+
+```bash
+npm run check
+npm run lint
+npm run build
+```
+
+## Deployment
+
+Production deployment is handled by Vercel using the SvelteKit Vercel adapter.
