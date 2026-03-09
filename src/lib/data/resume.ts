@@ -23,7 +23,6 @@ export type ResumeI18n = {
 	language: Writable<Language>;
 	DATA: Readable<ResumeData>;
 	messages: Readable<Messages>;
-	setLanguage: (language: Language) => void;
 	toggleLanguage: () => void;
 };
 
@@ -36,7 +35,6 @@ export function createResumeI18n(initialLanguage: Language): ResumeI18n {
 		language,
 		DATA,
 		messages,
-		setLanguage: (lang) => language.set(lang),
 		toggleLanguage: () => language.update((lang) => (lang === 'en' ? 'pt' : 'en'))
 	};
 }
