@@ -1,4 +1,5 @@
 import { isLanguage } from '$lib/data/resume';
+import { getLanguageCookieOptions } from '$lib/server/language';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, cookies, url }) => {
@@ -16,13 +17,7 @@ export const POST: RequestHandler = async ({ request, cookies, url }) => {
 		return new Response('Invalid language', { status: 400 });
 	}
 
-	cookies.set('language', language, {
-		path: '/',
-		maxAge: 60 * 60 * 24 * 365,
-		sameSite: 'lax',
-		httpOnly: true,
-		secure: url.protocol === 'https:'
-	});
+	cookies.set('language', language, getLanguageCookieOptions(url.protocol === 'https:'));
 
 	return new Response(null, { status: 204 });
 };
