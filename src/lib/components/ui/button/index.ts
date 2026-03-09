@@ -34,11 +34,4 @@ type Props = ButtonPrimitive.RootProps & {
 	size?: Size;
 };
 
-export {
-	Root,
-	type Props,
-	//
-	Root as Button,
-	type Props as ButtonProps,
-	buttonVariants
-};
+export { Root, type Props, Root as Button, buttonVariants };
