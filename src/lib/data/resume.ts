@@ -19,10 +19,6 @@ export function isLanguage(value: string | null | undefined): value is Language 
 	return value === 'en' || value === 'pt';
 }
 
-export function getResumeByLanguage(language: Language): ResumeData {
-	return RESUMES[language];
-}
-
 export type ResumeI18n = {
 	language: Writable<Language>;
 	DATA: Readable<ResumeData>;
